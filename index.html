@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="icon" type="image/svg+xml" href="/vite.svg"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>2D Game</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Gloria+Hallelujah&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Caveat:wght@400..700&family=Gloria+Hallelujah&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./style.css">
+    <script type="module" src="./main.js"></script>
+</head>
+<body>
+<div id="end-screen">
+    <h1>Game Over</h1>
+    <h2>
+        Score:
+        <label id="lblScore">00</label>
+    </h2>
+    <button type="reset">RE-PLAY</button>
+</div>
+
+<div id="overlay">
+    <h1>Loading Game Assets</h1>
+    <div id="progress-bar">
+        <div id="bar"></div>
+    </div>
+</div>
+<div id="character"></div>
+<!--<div id="zombie" class="enemy"></div>-->
+<div id="dead-bush" class="enemy"></div>
+<div id="platform">
+    <div id="tile1"></div>
+    <div id="tile2"></div>
+    <div id="tile3"></div>
+</div>
+
+
+<div id="start-screen">
+    <h2>The  <br><span id="undead">UnDEAD </span> <span id="reckoning">Reckoning</span></h2>
+    <button type="button">PLAY</button>
+    <div id="footer">Copyright &copy; 2024 Sanduni Navoda. All Rights Reserved.</div>
+</div>
+
+
+</body>
+</html>

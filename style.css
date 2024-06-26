@@ -1,0 +1,278 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+#character {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  left: 20px;
+  top: -20px;
+}
+
+#zombie {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  right: -20px;
+  bottom: 124px;
+}
+
+#dead-bush {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 80px;
+  height: 100px;
+  position: absolute;
+  bottom: 100px;
+  left: 500px;
+  background-image: url('/image/enemy/DeadBush.png');
+}
+
+.rotate {
+  transform: rotateY(-180deg);
+}
+
+#platform {
+  width: 100%;
+  height: 128px;
+  position: absolute;
+  bottom: 0;
+  display: flex;
+
+  div {
+    height: 100%;
+
+    &:first-child {
+      width: 128px;
+      background-image: url('/image/tile/Tile (1).png');
+    }
+
+    &:nth-child(2){
+      flex-grow: 1;
+      background-image: url('/image/tile/Tile (2).png');
+    }
+
+    &:last-child {
+      width: 128px;
+      background-image: url('/image/tile/Tile (3).png');
+    }
+  }
+}
+
+body {
+  background-image: url('/image/BG.png');
+  background-position: top center;
+  overflow: hidden;
+}
+
+#overlay {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  color: white;
+  align-items: center;
+  flex-direction: column;
+  font-family: system-ui, sans-serif;
+  z-index: 1;
+  gap: 20px;
+
+  h1 {
+    text-shadow: 0 0 8px white;
+  }
+
+  #progress-bar {
+    width: 90%;
+    height: 10px;
+    background-color: #787878;
+    box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.66);
+    border-radius: 5px;
+
+    #bar {
+      width: 0;
+      height: 100%;
+      background-color: rgba(244, 244, 244, 0.94);
+      border-radius: 5px;
+      transition: width 500ms;
+    }
+  }
+}
+
+.hide {
+  animation: fade 700ms forwards;
+}
+
+.hide > * {
+  display: none;
+}
+
+@keyframes fade {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(0);
+  }
+}
+
+#start-screen {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('/image/halloween_grave.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  flex-direction: column;
+  gap: 10px;
+
+  button {
+    padding: 10px 20px;
+    font-size: 2rem;
+    font-weight: 400;
+    color: #0f2a35;
+    font-family: "Bowlby One", sans-serif;
+    border-radius: 10px;
+    background-color: #ffffff;
+    border: none;
+    box-shadow: 0 0 4px 2px white;
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: 0 0 4px 4px white;
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    &:active {
+      box-shadow: 0 0 4px 4px white,  inset 0 0 5px 3px #8a8a8a;
+    }
+  }
+
+
+  h2 {
+    font-family: "Shadows Into Light", cursive;
+    font-style: normal;
+    color: white;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.8rem;
+
+    #undead {
+      font-family: "Gloria Hallelujah", cursive;
+      font-size: 8rem;
+      font-weight: 300;
+      vertical-align: sub;
+      color: #7cff00; /* Brighter, eerie green */
+      text-shadow:
+              0 0 10px #7cff00, /* Neon outer glow */
+              0 0 50px #00ff00, /* Slightly different shade for more depth */
+              0 0 100px #00ff00;
+      transition: color 0.5s, text-shadow 0.5s;
+    }
+
+    #reckoning{
+      font-family: "Gloria Hallelujah", cursive;
+      font-size: 6rem;
+      font-weight: 100;
+      vertical-align: sub;
+      color: ghostwhite; /* Brighter, eerie green */
+      text-shadow:
+              0 0 10px #7cff00, /* Neon outer glow */
+              0 0 50px #00ff00, /* Slightly different shade for more depth */
+              0 0 100px #00ff00;
+      transition: color 0.5s, text-shadow 0.5s;
+    }
+  }
+
+  #footer {
+    color: white;
+    font-family: system-ui, sans-serif;
+    margin-top: 40px;
+    font-size: small;
+  }
+}
+
+#end-screen {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(1, 56, 54, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  flex-direction: column;
+  gap: 10px;
+
+  button {
+    padding: 10px 20px;
+    font-size: 2rem;
+    font-weight: bold;
+    font-family: system-ui, sans-serif;
+    border-radius: 10px;
+    background-color: rgba(236, 213, 134, 0.55);
+    border: none;
+    box-shadow: 0 0 4px 2px white;
+    cursor: pointer;
+
+    &:hover {
+
+      box-shadow: 0 0 4px 4px white;
+      rotate: 1deg;
+    }
+
+    &:active {
+      box-shadow: 0 0 4px 4px white,  inset 0 0 5px 3px #8a8a8a;
+    }
+  }
+
+  h1{
+    font-family: fantasy, sans-serif;
+    color: #d2ab19;
+    margin-bottom: 80px;
+    text-align: center;
+    font-size: 8rem;
+  }
+
+  h2 {
+    font-family: system-ui, sans-serif;
+    color: white;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.8rem;
+
+    span {
+      font-size: 3rem;
+      vertical-align: sub;
+      color: lawngreen;
+      text-shadow: 1px 1px 9px #7aff01;
+    }
+  }
+
+  #footer {
+    color: white;
+    font-family: system-ui, sans-serif;
+    margin-top: 40px;
+    font-size: small;
+  }
+}
