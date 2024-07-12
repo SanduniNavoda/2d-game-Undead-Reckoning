@@ -108,11 +108,22 @@ let die = false;
 let lives = 5;
 let health = 100;
 let score = 0;
+let survivalTime = 0;
 let coins = 0;
 
 /* Rendering Function */
 
 backgroundSoundElm.play();
+
+const lblSurvivalTimeElm = document.querySelector(".lblSurvivalTime");
+const lblCoinElm = document.querySelector(".lblCoins");
+const tmr4SurvivalTime = setInterval(() => {
+    lblSurvivalTimeElm.textContent = `${++survivalTime}`;
+}, 1000);
+
+const tmr4Coins = setInterval(() => {
+    lblCoinElm.textContent = `${coins}`;
+}, 1);
 
 const checkPosition = () => {
     enemyElms.forEach(enemyElm => {
@@ -122,7 +133,11 @@ const checkPosition = () => {
             enemyElm.classList.contains('enemy')) {
             happenDie();
         } else {
+            survivalTime = survivalTime + 0.001;
+            survivalTime = Math.floor(survivalTime);
+            console.log(Math.floor(survivalTime));
             score = score + 0.0001;//add one score for 10 second survival time
+            score = Math.floor(score);
             console.log(Math.floor(score));
         }
     });
@@ -140,7 +155,7 @@ const motion = setInterval(() => {
             clearInterval(positionInterval);
             setTimeout(() => {
                 document.querySelector("#end-screen").classList.remove('hide');
-                scoreBoardElm.textContent = `${Math.floor(score)}`;
+                scoreBoardElm.textContent = `${score}`;
             }, 800);
         }
         return;
@@ -279,8 +294,13 @@ setInterval(() => {
             coinElm.offsetTop <= (characterElm.offsetTop + characterElm.offsetHeight) &&
             coinElm.offsetTop + coinElm.offsetHeight >= characterElm.offsetTop){
             const tmr4CoinElmMove = setInterval(() => coinElmMoveFn(coinElm), 1000/10);
-            coins = coins + 1;
-            score = score + 5;
+
+            if(!coinElm.classList.contains('collected')){
+                coinElm.classList.add('collected');
+                coins++;
+                score = score + 5;
+            }
+
 
         }
     });
@@ -356,6 +376,7 @@ function happenDie() {
     run = false;
     jump = false;
     die = true;
+    clearInterval(tmr4SurvivalTime);
     deathSoundElm.play();
 }
 

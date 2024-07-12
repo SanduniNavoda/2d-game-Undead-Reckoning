@@ -48,9 +48,12 @@
 
   #score-board{
     height: 50px;
-    width: 80px;
+    width: 200px;
     background-color: lime;
     position: absolute;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 }
 
