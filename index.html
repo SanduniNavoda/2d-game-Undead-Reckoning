@@ -18,6 +18,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Caveat:wght@400..700&family=Gloria+Hallelujah&family=Shadows+Into+Light&display=swap" rel="stylesheet">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Margarine&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="./style.css">
     <script type="module" src="./main.js"></script>
 </head>
@@ -26,7 +30,7 @@
     <h1>Game Over</h1>
     <h2>
         Score:
-        <label id="lblScore">00</label>
+        <label class="lblScore">00</label>
     </h2>
     <button type="reset">RE-PLAY</button>
 </div>
@@ -40,6 +44,12 @@
 <div id="character"></div>
 <!--<div id="zombie" class="enemy"></div>-->
 <div id="dead-bush" class="enemy"></div>
+<!--<div id="header">-->
+<!--    <div id="score-board">-->
+<!--        Score: <label class="lblScore"></label>-->
+<!--    </div>-->
+<!--</div>-->
+
 <div id="platform">
     <div id="tile1"></div>
     <div id="tile2"></div>
@@ -50,6 +60,36 @@
 <div id="start-screen">
     <h2>The  <br><span id="undead">UnDEAD </span> <span id="reckoning">Reckoning</span></h2>
     <button type="button">PLAY</button>
+    <div id="instructions">
+        <div id="textInstructions" class="text">
+            <div>
+                - You Only can attack on male zombies.
+            </div>
+            <div>
+                - female zombies can't be killed, You have to jump over to survive.
+            </div>
+        </div>
+
+        <div id="keyInstructions">
+            <div id="jump" class="container">
+                <div id="space-bar"></div>
+                <div class="text">Jump</div>
+            </div>
+            <div id="run-left" class="container">
+                <div id="left-arrow"></div>
+                <div class="text">Left</div>
+            </div>
+            <div id="run-right" class="container">
+                <div id="right-arrow"></div>
+                <div class="text">Right</div>
+            </div>
+            <div id="attack" class="container">
+                <div id="keyQ"></div>
+                <div class="text">Attack</div>
+            </div>
+        </div>
+    </div>
+
     <div id="footer">Copyright &copy; 2024 Sanduni Navoda. All Rights Reserved.</div>
 </div>
 

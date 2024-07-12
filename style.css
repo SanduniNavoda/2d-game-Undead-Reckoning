@@ -7,7 +7,7 @@
 #character {
   background-size: contain;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: bottom;
   width: 100px;
   height: 100px;
   position: absolute;
@@ -18,7 +18,7 @@
 #zombie {
   background-size: contain;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: bottom;
   width: 100px;
   height: 100px;
   position: absolute;
@@ -37,6 +37,23 @@
   left: 500px;
   background-image: url('/image/enemy/DeadBush.png');
 }
+
+#header{
+  height: 80px;
+  width: 100vw;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  #score-board{
+    height: 50px;
+    width: 80px;
+    background-color: lime;
+    position: absolute;
+  }
+}
+
 
 .rotate {
   transform: rotateY(-180deg);
@@ -200,6 +217,122 @@ body {
               0 0 100px #00ff00;
       transition: color 0.5s, text-shadow 0.5s;
     }
+  }
+
+  #instructions{
+    /*height: 280px;*/
+    /*width: 500px;*/
+    /*background-color: white;*/
+    /*background-image: url('/image/instruction-sheet.png');*/
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow:
+            0 0 20px #00ff00,
+            0 0 10px #fbfdfb,
+    0 0 50px #cfdac4,
+    0 0 100px #00ff00;
+    border-radius: 20px;
+
+
+
+    .text{
+      font-family: "Margarine", sans-serif;
+      font-weight: 400;
+      font-style: normal;
+      color: #1a1f17;
+    }
+
+    #textInstructions{
+      height: 115px;
+      width: 520px;
+      background-color: rgba(237, 237, 238, 0.16);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      font-size: 16.8px;
+      background-color: rgba(100, 224, 72, 0.52);
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+    }
+
+    #keyInstructions{
+      height: 150px;
+      width: 520px;
+      background-color: rgba(100, 224, 72, 0.52);
+      background-position: center center;
+      background-size: 500px 200px;
+      background-repeat: no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+
+      .container{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        margin: 10px;
+
+        #space-bar{
+          height : 115px;
+          width : 180px;
+          background-image: url('/image/button/space.png');
+          /*background-color: red;*/
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: contain;
+          /*margin-right: 50px;*/
+          /*margin-left: 50px;*/
+
+        }
+
+        #left-arrow{
+          height : 115px;
+          width : 50px;
+          background-image: url('/image/button/arrow-left.png');
+          /*background-color: red;*/
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: contain;
+          /*margin-right: 10px;*/
+
+        }
+
+        #right-arrow{
+          height : 115px;
+          width : 50px;
+          background-image: url('/image/button/arrow-right.png');
+          /*background-color: red;*/
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: contain;
+          /*margin-right: 50px;*/
+        }
+
+        #keyQ{
+          height : 115px;
+          width : 50px;
+          background-image: url('/image/button/letter-q.png');
+          /*background-color: red;*/
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: contain;
+
+        }
+
+
+      }
+  }
+
+
+
+
   }
 
   #footer {
