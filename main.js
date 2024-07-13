@@ -59,6 +59,12 @@ zombieLaugh.setAttribute("src", "/sound/zombie-laugh.mp3");
 zombieLaugh.volume = 0.5;
 document.body.appendChild(zombieLaugh);
 
+const coinCollectSoundElm = document.createElement("audio");
+coinCollectSoundElm.setAttribute("preload", "auto");
+coinCollectSoundElm.setAttribute("src", "/sound/coin-collect.mp3");
+coinCollectSoundElm.volume = 0.5;
+document.body.appendChild(coinCollectSoundElm);
+
 await new Promise((resolve) => {
     document.querySelector("#start-screen > button")
         .addEventListener('click', async () => {
@@ -128,7 +134,12 @@ let zombieDie = false;
 let angle = 0;
 let tmr4Jump;
 let tmr4Run;
+let tmr4SurvivalTime;
+let tmr4Coins;
+let tmr4CoinCollect;
+let checkPosition;
 let previousTouch;
+let motion;
 let die = false;
 let lives = 5;
 let health = 100;
@@ -140,73 +151,145 @@ let coins = 0;
 
 backgroundSoundElm.play();
 
+const resetGame = () => {
+    document.querySelector("#end-screen").classList.add('hide');
+    dx = 0;
+    i = 0;
+    t = 0;
+    run = false;
+    jump = false;
+    attack = false;
+    zombieDie = false;
+    angle = 0;
+    die = false;
+    lives = 5;
+    health = 100;
+    score = 0;
+    survivalTime = 0;
+    coins = 0;
+
+    // Clear intervals
+    clearInterval(motion);
+    clearInterval(tmr4CoinCollect);
+    clearInterval(tmr4SurvivalTime);
+    clearInterval(tmr4Coins);
+
+    // Reset character position
+    characterElm.style.top = `${innerHeight - 128 - characterElm.offsetHeight}px`;
+    characterElm.style.left = '0';
+    characterElm.classList.remove('rotate');
+
+    // Reset score and survival time displays
+    lblSurvivalTimeElm.textContent = `${survivalTime}`;
+    lblCoinElm.textContent = `${coins}`;
+
+    // Remove existing enemies and coins
+    document.querySelectorAll('.enemy').forEach(enemy => enemy.remove());
+    document.querySelectorAll('.coin').forEach(coin => coin.remove());
+
+    // Reinitialize game elements
+    initializeCharacter();
+    initializeEnemies();
+    enemyElms = document.querySelectorAll('.enemy');
+    initializeTimers();
+}
+
+
 const lblSurvivalTimeElm = document.querySelector(".lblSurvivalTime");
 const lblCoinElm = document.querySelector(".lblCoins");
-const tmr4SurvivalTime = setInterval(() => {
-    lblSurvivalTimeElm.textContent = `${++survivalTime}`;
-}, 1000);
 
-const tmr4Coins = setInterval(() => {
-    lblCoinElm.textContent = `${coins}`;
-}, 1);
+const initializeTimers = () => {
+    tmr4SurvivalTime = setInterval(() => {
+        lblSurvivalTimeElm.textContent = `${++survivalTime}`;
+    }, 1000);
 
-const checkPosition = () => {
-    enemyElms.forEach(enemyElm => {
-        if ((characterElm.offsetLeft - 20 + characterElm.offsetWidth) > (enemyElm.offsetLeft + 20) &&
-            (characterElm.offsetLeft + 20) < (enemyElm.offsetLeft - 20 + enemyElm.offsetWidth) &&
-            (characterElm.offsetTop - 20 + characterElm.offsetHeight > enemyElm.offsetTop + 20) &&
-            enemyElm.classList.contains('enemy')) {
-            happenDie();
-        } else {
-            survivalTime = survivalTime + 0.001;
-            survivalTime = Math.floor(survivalTime);
-            console.log(Math.floor(survivalTime));
-            score = score + 0.0001;//add one score for 10 second survival time
-            score = Math.floor(score);
-            console.log(Math.floor(score));
-        }
+    tmr4Coins = setInterval(() => {
+        lblCoinElm.textContent = `${coins}`;
+    }, 1);
+
+
+    tmr4CoinCollect = setInterval(() => {
+        const coinElms = document.querySelectorAll('.coin');
+        coinElms.forEach(coinElm => {
+            if(coinElm.offsetLeft <= (characterElm.offsetLeft + characterElm.offsetWidth) &&
+                coinElm.offsetLeft + coinElm.offsetWidth >= characterElm.offsetLeft &&
+                coinElm.offsetTop <= (characterElm.offsetTop + characterElm.offsetHeight) &&
+                coinElm.offsetTop + coinElm.offsetHeight >= characterElm.offsetTop){
+                const tmr4CoinElmMove = setInterval(() => coinElmMoveFn(coinElm), 1000/10);
+                coinCollectSoundElm.play();
+
+                if(!coinElm.classList.contains('collected')){
+                    coinElm.classList.add('collected');
+                    coins++;
+                    score = score + 5;
+                }
+
+
+            }
+        });
+    }, 10);
+}
+initializeTimers();
+
+const initializeCharacter = () => {
+    checkPosition = setInterval(() => {
+        enemyElms.forEach(enemyElm => {
+            if ((characterElm.offsetLeft - 20 + characterElm.offsetWidth) > (enemyElm.offsetLeft + 20) &&
+                (characterElm.offsetLeft + 20) < (enemyElm.offsetLeft - 20 + enemyElm.offsetWidth) &&
+                (characterElm.offsetTop - 20 + characterElm.offsetHeight > enemyElm.offsetTop + 20) &&
+                enemyElm.classList.contains('enemy')) {
+                happenDie();
+            } else {
+                survivalTime = survivalTime + 0.001;
+                survivalTime = Math.floor(survivalTime);
+                console.log(Math.floor(survivalTime));
+                score = score + 0.0001;//add one score for 10 second survival time
+                score = Math.floor(score);
+                console.log(Math.floor(score));
+            }
+        });
     });
-};
 
-const positionInterval = setInterval(checkPosition, 1); // Check every 1ms
 
-const motion = setInterval(() => {
-    if (die) {
-        characterElm.style.width = "100px"
-        characterElm.style.height = "100px"
-        characterElm.style.backgroundImage = `url('/image/character/Dead__00${i++}.png')`;
-        if (i === 10) {
-            clearInterval(motion);
-            clearInterval(positionInterval);
-            setTimeout(() => {
-                document.querySelector("#end-screen").classList.remove('hide');
-                zombieLaugh.play();
-                scoreBoardElm.textContent = `${score}`;
-            }, 800);
+
+    motion = setInterval(() => {
+        if (die) {
+            characterElm.style.width = "100px"
+            characterElm.style.height = "100px"
+            characterElm.style.backgroundImage = `url('/image/character/Dead__00${i++}.png')`;
+            if (i === 10) {
+                //clearInterval(motion);
+                //clearInterval(positionInterval);
+                setTimeout(() => {
+                    document.querySelector("#end-screen").classList.remove('hide');
+                    zombieLaugh.play();
+                    scoreBoardElm.textContent = `${score}`;
+                }, 800);
+            }
+            return;
         }
-        return;
-    }
 
-    if (jump) {
-        characterElm.style.width = "100px"
-        characterElm.style.height = "100px"
-        characterElm.style.backgroundImage = `url('/image/character/Jump__00${i++}.png')`;
-    } else if (attack) {
-        characterElm.style.width = "150px"
-        characterElm.style.height = "110px"
-        characterElm.style.backgroundImage = `url('/image/character/Attack__00${i++}.png')`;
-    } else if (run) {
-        characterElm.style.width = "100px"
-        characterElm.style.height = "100px"
-        characterElm.style.backgroundImage = `url('/image/character/Run__00${i++}.png')`;
-    } else {
-        characterElm.style.width = "100px"
-        characterElm.style.height = "100px"
-        characterElm.style.backgroundImage = `url('/image/character/Idle__00${i++}.png')`;
-    }
-
-    if (i === 10) i = 0;
-}, 1000 / 30);
+        if (jump) {
+            characterElm.style.width = "100px"
+            characterElm.style.height = "100px"
+            characterElm.style.backgroundImage = `url('/image/character/Jump__00${i++}.png')`;
+        } else if (attack) {
+            characterElm.style.width = "150px"
+            characterElm.style.height = "110px"
+            characterElm.style.backgroundImage = `url('/image/character/Attack__00${i++}.png')`;
+        } else if (run) {
+            characterElm.style.width = "100px"
+            characterElm.style.height = "100px"
+            characterElm.style.backgroundImage = `url('/image/character/Run__00${i++}.png')`;
+        } else {
+            characterElm.style.width = "100px"
+            characterElm.style.height = "100px"
+            characterElm.style.backgroundImage = `url('/image/character/Idle__00${i++}.png')`;
+        }
+        if (i === 10) i = 0;
+    }, 1000 / 30);
+}
+initializeCharacter();
 
 // Initially Fall Down
 const tmr4InitialFall = setInterval(() => {
@@ -218,120 +301,118 @@ const tmr4InitialFall = setInterval(() => {
     characterElm.style.top = `${top}px`;
 }, 20);
 
-for (let k = 0; k < 20; k++) {
-    const zombieElms = document.createElement("div");
-    //zombieElms.setAttribute("class", "enemy zombie");
-    const gender = ['male', 'female'];
-    const num = (Math.random() > 0.5) ? 0 : 1;
-    const selectedGender = gender[num];
-    if (selectedGender === 'female'){
-        zombieElms.setAttribute("class", "enemy");
-    } else {
-        zombieElms.setAttribute("class", "enemy zombie");
-    }
-    zombieElms.style.backgroundPosition = "center";
-    zombieElms.style.backgroundRepeat = "no-repeat";
-    zombieElms.style.backgroundSize = "contain";
-    zombieElms.style.width = "100px";
-    zombieElms.style.height = "100px";
-    zombieElms.style.position = "absolute";
-    zombieElms.style.bottom = "124px";
-    zombieElms.style.right = `${Math.random() * -10000 - 2}px`;
-    bodyElm.appendChild(zombieElms);
+const initializeEnemies = () => {
+    const deadBushElm1 = document.createElement("div");
+    deadBushElm1.classList.add('enemy');
+    deadBushElm1.style.backgroundSize = "contain";
+    deadBushElm1.style.backgroundRepeat = "no-repeat";
+    deadBushElm1.style.backgroundPosition = "center";
+    deadBushElm1.style.width = "80px";
+    deadBushElm1.style.height = "100px";
+    deadBushElm1.style.position = "absolute";
+    deadBushElm1.style.bottom = "100px";
+    deadBushElm1.style.left = "500px";
+    deadBushElm1.style.backgroundImage = "url('/image/enemy/DeadBush.png')";
+    bodyElm.appendChild(deadBushElm1);
 
-    let j = 0;
-    let dxZombie = 0;
-    let zombieDie = false;
 
-    const zombieWalkInterval = setInterval(() => {
-        if (!zombieDie) {
-            zombieElms.style.backgroundImage = `url('/image/enemy/zombie/${selectedGender}/Walk__00${j++}.png')`;
-            if (j === 10) j = 0;
+    for (let k = 0; k < 20; k++) {
+        const zombieElms = document.createElement("div");
+        //zombieElms.setAttribute("class", "enemy zombie");
+        const gender = ['male', 'female'];
+        const num = (Math.random() > 0.5) ? 0 : 1;
+        const selectedGender = gender[num];
+        if (selectedGender === 'female'){
+            zombieElms.setAttribute("class", "enemy");
+        } else {
+            zombieElms.setAttribute("class", "enemy zombie");
         }
-    }, 1000 / 10);
+        zombieElms.style.backgroundPosition = "center";
+        zombieElms.style.backgroundRepeat = "no-repeat";
+        zombieElms.style.backgroundSize = "contain";
+        zombieElms.style.width = "100px";
+        zombieElms.style.height = "100px";
+        zombieElms.style.position = "absolute";
+        zombieElms.style.bottom = "124px";
+        zombieElms.style.right = `${Math.random() * -10000 - 2}px`;
+        bodyElm.appendChild(zombieElms);
 
-    dxZombie = Math.random() * -5 - 5;
-    zombieElms.classList.add('rotate');
+        let j = 0;
+        let dxZombie = 0;
+        let zombieDie = false;
 
-    const zombieMoveInterval = setInterval(() => {
-        const zombieLeft = zombieElms.offsetLeft + dxZombie;
-        zombieElms.style.left = `${zombieLeft}px`;
-    }, 100);
+        const zombieWalkInterval = setInterval(() => {
+            if (!zombieDie) {
+                zombieElms.style.backgroundImage = `url('/image/enemy/zombie/${selectedGender}/Walk__00${j++}.png')`;
+                if (j === 10) j = 0;
+            }
+        }, 1000 / 10);
 
-    const intervalForZombieSound = setInterval(() => {
-        if (zombieElms.offsetLeft <= window.innerWidth) {
-            zombieSound.play();
-            clearInterval(intervalForZombieSound);
-        }
-    }, 1);
+        dxZombie = Math.random() * -5 - 5;
+        zombieElms.classList.add('rotate');
 
-    const checkPositionForAttack = () => {
-        //zombieDie = false;
-        if(!zombieDie && zombieElms.classList.contains('zombie')){
-            if ((characterElm.offsetLeft - 10 + characterElm.offsetWidth) > (zombieElms.offsetLeft + 10) &&
-                (characterElm.offsetLeft + 10) < (zombieElms.offsetLeft - 10 + zombieElms.offsetWidth) &&
-                characterElm.offsetTop - 10 + characterElm.offsetHeight > zombieElms.offsetTop + 10) {
-                if (attack) {
-                    zombieDie = true;
-                    zombieDeathSoundElm.play();
-                    zombieElms.classList.remove('enemy');
-                    j = 0;
-                    const zombieDeathInterval = setInterval(() => {
-                        zombieElms.style.bottom = "100px";
-                        zombieElms.style.backgroundImage = `url('/image/enemy/zombie/${selectedGender}/Dead (${j++}).png')`;
-                        if (j === 12) {
-                            clearInterval(zombieWalkInterval);
-                            clearInterval(zombieDeathInterval);
-                            clearInterval(zombieMoveInterval);
+        const zombieMoveInterval = setInterval(() => {
+            const zombieLeft = zombieElms.offsetLeft + dxZombie;
+            zombieElms.style.left = `${zombieLeft}px`;
+        }, 100);
 
-                            setTimeout(() => {
-                                let coinElm = document.createElement("div");
-                                coinElm.classList.add('coin')
-                                coinElm.style.position = "absolute";
-                                coinElm.style.top = `${zombieElms.offsetTop + zombieElms.offsetHeight/2 - coinElm.offsetHeight/2}px`;
-                                coinElm.style.left = `${zombieElms.offsetLeft + zombieElms.offsetWidth/2 - coinElm.offsetWidth/2}px`;
-                                coinElm.style.height = "20px";
-                                coinElm.style.width ="20px";
-                                coinElm.style.backgroundImage = `url('/image/dollar.png')`;
-                                coinElm.style.backgroundSize = "contain";
-                                document.body.appendChild(coinElm);
+        const intervalForZombieSound = setInterval(() => {
+            if (zombieElms.offsetLeft <= window.innerWidth) {
+                zombieSound.play();
+                clearInterval(intervalForZombieSound);
+            }
+        }, 1);
 
-                                zombieElms.remove();
+        const checkPositionForAttack = () => {
+            //zombieDie = false;
+            if(!zombieDie && zombieElms.classList.contains('zombie')){
+                if ((characterElm.offsetLeft - 10 + characterElm.offsetWidth) > (zombieElms.offsetLeft + 10) &&
+                    (characterElm.offsetLeft + 10) < (zombieElms.offsetLeft - 10 + zombieElms.offsetWidth) &&
+                    characterElm.offsetTop - 10 + characterElm.offsetHeight > zombieElms.offsetTop + 10) {
+                    if (attack) {
+                        zombieDie = true;
+                        zombieDeathSoundElm.play();
+                        zombieElms.classList.remove('enemy');
+                        j = 0;
+                        const zombieDeathInterval = setInterval(() => {
+                            zombieElms.style.bottom = "100px";
+                            zombieElms.style.backgroundImage = `url('/image/enemy/zombie/${selectedGender}/Dead (${j++}).png')`;
+                            if (j === 12) {
+                                clearInterval(zombieWalkInterval);
+                                clearInterval(zombieDeathInterval);
+                                clearInterval(zombieMoveInterval);
 
-                            }, 500);
-                        }
-                    }, 1000 / 30);
+                                setTimeout(() => {
+                                    let coinElm = document.createElement("div");
+                                    coinElm.classList.add('coin')
+                                    coinElm.style.position = "absolute";
+                                    coinElm.style.top = `${zombieElms.offsetTop + zombieElms.offsetHeight/2 - coinElm.offsetHeight/2}px`;
+                                    coinElm.style.left = `${zombieElms.offsetLeft + zombieElms.offsetWidth/2 - coinElm.offsetWidth/2}px`;
+                                    coinElm.style.height = "20px";
+                                    coinElm.style.width ="20px";
+                                    coinElm.style.backgroundImage = `url('/image/dollar.png')`;
+                                    coinElm.style.backgroundSize = "contain";
+                                    document.body.appendChild(coinElm);
+
+                                    zombieElms.remove();
+
+                                }, 500);
+                            }
+                        }, 1000 / 30);
+                    }
                 }
             }
-        }
 
-    };
+        };
 
-    setInterval(checkPositionForAttack, 1); // Check every 1ms
+        setInterval(checkPositionForAttack, 1); // Check every 1ms
+    }
 }
+initializeEnemies();
 
-const enemyElms = document.querySelectorAll('.enemy');
-
-
-setInterval(() => {
-    const coinElms = document.querySelectorAll('.coin');
-    coinElms.forEach(coinElm => {
-        if(coinElm.offsetLeft <= (characterElm.offsetLeft + characterElm.offsetWidth) &&
-            coinElm.offsetLeft + coinElm.offsetWidth >= characterElm.offsetLeft &&
-            coinElm.offsetTop <= (characterElm.offsetTop + characterElm.offsetHeight) &&
-            coinElm.offsetTop + coinElm.offsetHeight >= characterElm.offsetTop){
-            const tmr4CoinElmMove = setInterval(() => coinElmMoveFn(coinElm), 1000/10);
-
-            if(!coinElm.classList.contains('collected')){
-                coinElm.classList.add('collected');
-                coins++;
-                score = score + 5;
-            }
+let enemyElms = document.querySelectorAll('.enemy');
 
 
-        }
-    });
-}, 10);
 
 
 
@@ -468,3 +549,9 @@ characterElm.addEventListener('touchend', (e) => {
     previousTouch = null;
     dx = 0;
 });
+
+document.querySelector("#btnReplay").addEventListener('click', () => {
+    resetGame();
+    document.querySelector("#end-screen").classList.add('.hide');
+    backgroundSoundElm.play();
+})
