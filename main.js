@@ -5,17 +5,21 @@ const scoreBoardElm = document.querySelector(".lblScore");
 document.querySelector("#end-screen").classList.add('hide')
 
 const startScreenSoundElm = document.createElement("audio");
-startScreenSoundElm.setAttribute("preload", "auto");
+//startScreenSoundElm.setAttribute("preload", "auto");
 startScreenSoundElm.setAttribute("src", "/sound/theme.mp3");
 startScreenSoundElm.setAttribute("loop", "true");
 startScreenSoundElm.volume = 0.5;
-document.body.appendChild(startScreenSoundElm);
+
+
+window.addEventListener('DOMContentLoaded', () => {
+    startScreenSoundElm.play();
+})
 
 const backgroundSoundElm = document.createElement("audio");
 backgroundSoundElm.setAttribute("preload", "auto");
 backgroundSoundElm.setAttribute("src", "/sound/starry-night-sound.mp3");
 backgroundSoundElm.setAttribute("loop", "true");
-backgroundSoundElm.volume = 0.5;
+backgroundSoundElm.volume = 1.0;
 document.body.appendChild(backgroundSoundElm);
 
 const deathSoundElm = document.createElement("audio");
@@ -30,15 +34,36 @@ playButtonSound.setAttribute("src", "/sound/play-button-click-sound.mp3");
 playButtonSound.volume = 0.5;
 document.body.appendChild(playButtonSound);
 
+
 const zombieSound = document.createElement("audio");
 zombieSound.setAttribute("preload", "auto");
 zombieSound.setAttribute("src", "/sound/zombie-moan.mp3");
-zombieSound.volume = 1;
+zombieSound.volume = 1.0;
 document.body.appendChild(zombieSound);
+
+const attackSound = document.createElement("audio");
+attackSound.setAttribute("preload", "auto");
+attackSound.setAttribute("src", "/sound/attack.mp3");
+attackSound.volume = 1.0;
+document.body.appendChild(attackSound);
+
+const zombieDeathSoundElm = document.createElement("audio");
+zombieDeathSoundElm.setAttribute("preload", "auto");
+zombieDeathSoundElm.setAttribute("src", "/sound/monster_death.mp3");
+zombieDeathSoundElm.volume = 1.0;
+document.body.appendChild(zombieDeathSoundElm);
+
+const zombieLaugh = document.createElement("audio");
+zombieLaugh.setAttribute("preload", "auto");
+zombieLaugh.setAttribute("src", "/sound/zombie-laugh.mp3");
+zombieLaugh.volume = 0.5;
+document.body.appendChild(zombieLaugh);
 
 await new Promise((resolve) => {
     document.querySelector("#start-screen > button")
         .addEventListener('click', async () => {
+            startScreenSoundElm.pause();
+            startScreenSoundElm.remove();
             playButtonSound.play();
             // await document.querySelector("html").requestFullscreen({
             //     navigationUI: 'hide'
@@ -155,6 +180,7 @@ const motion = setInterval(() => {
             clearInterval(positionInterval);
             setTimeout(() => {
                 document.querySelector("#end-screen").classList.remove('hide');
+                zombieLaugh.play();
                 scoreBoardElm.textContent = `${score}`;
             }, 800);
         }
@@ -247,6 +273,7 @@ for (let k = 0; k < 20; k++) {
                 characterElm.offsetTop - 10 + characterElm.offsetHeight > zombieElms.offsetTop + 10) {
                 if (attack) {
                     zombieDie = true;
+                    zombieDeathSoundElm.play();
                     zombieElms.classList.remove('enemy');
                     j = 0;
                     const zombieDeathInterval = setInterval(() => {
@@ -383,6 +410,7 @@ function happenDie() {
 // Attack
 function doAttack() {
     attack = true;
+    attackSound.play();
 }
 
 // Event Listeners
