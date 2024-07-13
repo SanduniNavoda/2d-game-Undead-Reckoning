@@ -71,9 +71,9 @@ await new Promise((resolve) => {
             startScreenSoundElm.pause();
             startScreenSoundElm.remove();
             playButtonSound.play();
-            // await document.querySelector("html").requestFullscreen({
-            //     navigationUI: 'hide'
-            // });
+            await document.querySelector("html").requestFullscreen({
+                navigationUI: 'hide'
+            });
             document.querySelector("#start-screen").remove();
             resolve();
         });
