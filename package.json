@@ -10,5 +10,7 @@
   },
   "devDependencies": {
     "vite": "^5.2.0"
-  }
+  },
+  "author": "Sanduni Navoda <sanduniakn@gmail.com>",
+  "license": "MIT"
 }

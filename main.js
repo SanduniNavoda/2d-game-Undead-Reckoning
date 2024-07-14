@@ -239,6 +239,7 @@ const initializeCharacter = () => {
                 (characterElm.offsetTop - 20 + characterElm.offsetHeight > enemyElm.offsetTop + 20) &&
                 enemyElm.classList.contains('enemy')) {
                 happenDie();
+                clearInterval(checkPosition)
             } else {
                 survivalTime = survivalTime + 0.001;
                 survivalTime = Math.floor(survivalTime);
@@ -248,7 +249,7 @@ const initializeCharacter = () => {
                 console.log(Math.floor(score));
             }
         });
-    });
+    },1);
 
 
 
@@ -545,19 +546,17 @@ characterElm.addEventListener('touchmove', (e) => {
     previousTouch = currentTouch;
 });
 
-let lastTapTime = 0;
-const doubleTapThreshold = 300;
+let lastTap = 0;
 
 characterElm.addEventListener('touchend', (e) => {
     const currentTime = new Date().getTime();
-    const tapLength = currentTime - lastTapTime;
-    if (tapLength < doubleTapThreshold && tapLength > 0) {
+    const tapLength = currentTime - lastTap;
+
+    if (tapLength < 300 && tapLength > 0) {
         doAttack();
     }
-    lastTapTime = currentTime;
-});
 
-characterElm.addEventListener('touchend', (e) => {
+    lastTap = currentTime;
     previousTouch = null;
     dx = 0;
 });
