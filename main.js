@@ -545,6 +545,18 @@ characterElm.addEventListener('touchmove', (e) => {
     previousTouch = currentTouch;
 });
 
+let lastTapTime = 0;
+const doubleTapThreshold = 300;
+
+characterElm.addEventListener('touchend', (e) => {
+    const currentTime = new Date().getTime();
+    const tapLength = currentTime - lastTapTime;
+    if (tapLength < doubleTapThreshold && tapLength > 0) {
+        doAttack();
+    }
+    lastTapTime = currentTime;
+});
+
 characterElm.addEventListener('touchend', (e) => {
     previousTouch = null;
     dx = 0;
