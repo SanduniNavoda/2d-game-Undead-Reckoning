@@ -1,4 +1,11 @@
 # Zombie Survival Game
+![image](https://github.com/user-attachments/assets/7cba3559-3368-47fa-b3eb-6f695cef4a4a)
+
+![image](https://github.com/user-attachments/assets/5d01653a-cb4b-4bba-9008-e6ce6bc8dd0d)
+
+
+![image](https://github.com/user-attachments/assets/a1f36621-560f-4b40-82d7-0c765e80be42)
+
 
 This is a zombie survival game where the player must survive in a graveyard setting. The game features touch controls, sound effects, and various interactions with zombies.
 
