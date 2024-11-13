@@ -1,4 +1,5 @@
-# Zombie Survival Game
+# Zombie Survival Game [![Play Button](https://img.shields.io/badge/Play-Game-brightgreen?style=for-the-badge)](https://undead-reckoning-2d-game.web.app)
+
 ![image](https://github.com/user-attachments/assets/7cba3559-3368-47fa-b3eb-6f695cef4a4a)
 
 ![image](https://github.com/user-attachments/assets/5d01653a-cb4b-4bba-9008-e6ce6bc8dd0d)
